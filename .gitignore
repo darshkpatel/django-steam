@@ -3,4 +3,4 @@ venv
 __pycache__
 *.pycache
 .vscode
-*.sqlite3
+db.sqlite3
