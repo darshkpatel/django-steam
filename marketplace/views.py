@@ -3,14 +3,16 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import CreateView
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login,logout
+from django.contrib.auth.decorators import login_required
 
 from .forms import UsersRegisterForm
 from .forms import UsersLoginForm
 from .models import Game,User
 # Create your views here.
 
+@login_required(login_url='/accounts/login')
 def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+	return HttpResponse("Hello, {}. You're at the marketplace index.".format(request.user.username))
 
 def login_view(request):
 	form = UsersLoginForm(request.POST or None)

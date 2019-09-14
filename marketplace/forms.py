@@ -40,25 +40,42 @@ class UsersRegisterForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
+            "first_name",
+            "last_name",
             "username",
+            "dob",
             "email",
             "confirm_email", 
+            "recovery_email",
             "password",
-            "dob"]
+            ]
+    
     username = forms.CharField()
+    first_name = forms.CharField()
+    last_name = forms.CharField()
     email = forms.EmailField(label = "Email")
     confirm_email = forms.EmailField(label = "Confirm Email")
+    recovery_email = forms.EmailField(label = "Recovery Email")
     password = forms.CharField(widget = forms.PasswordInput)
-    dob = forms.DateField(widget = forms.DateInput)
+    dob = forms.DateField(widget = forms.DateInput, label="DoB (MM/DD/YYYY)")
 
     def __init__(self, *args, **kwargs):
         super(UsersRegisterForm, self).__init__(*args, **kwargs)
         self.fields['username'].widget.attrs.update({
             'class': 'form-control',
             "name":"username"})
+        self.fields['first_name'].widget.attrs.update({
+            'class': 'form-control',
+            "name":"first_name"})
+        self.fields['last_name'].widget.attrs.update({
+            'class': 'form-control',
+            "name":"last_name"})
         self.fields['email'].widget.attrs.update({
             'class': 'form-control',
             "name":"email"})
+        self.fields['recovery_email'].widget.attrs.update({
+            'class': 'form-control',
+            "name":"recovery_email"})
         self.fields['confirm_email'].widget.attrs.update({
             'class': 'form-control',
             "name":"confirm_email"})
