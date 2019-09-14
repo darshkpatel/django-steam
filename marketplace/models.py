@@ -4,14 +4,14 @@ from datetime import date
 # Create your models here.
 class User(models.Model):
     dob = models.DateField()
-    first_name = models.TextField(max_length=50)
-    last_name = models.TextField(max_length=50)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
     email = models.EmailField()
-    recovered_email = models.EmailField()
-    username = models.TextField(max_length=25, unique=True, primary_key=True)
-    # waller_id = models.ForeignKey
+    recovery_email = models.EmailField()
+    username = models.CharField(max_length=25, unique=True, primary_key=True)
+    password = models.CharField(max_length=100)
 class Game(models.Model):
-    name = models.TextField(unique=True)
+    name = models.CharField(unique=True, max_length=40)
     price = models.DecimalField(default=0.0, decimal_places=1, max_digits=5)
     gameID = models.AutoField(primary_key=True)
     timesBought = models.IntegerField(default=0)
