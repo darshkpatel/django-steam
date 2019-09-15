@@ -38,9 +38,9 @@ class GameTags(models.Model):
 
 class DLC(models.Model):
     DLCid = models.AutoField(primary_key=True)
-    name = models.TextField(unique=True)
+    name = models.CharField(unique=True, max_length=50)
     ageRating = models.IntegerField(default=7)
-    stars = models.DecimalField(validators=[MaxValueValidator(5), MinValueValidator(0)], max_digits=1, decimal_places=1)
+    stars = models.DecimalField(validators=[MaxValueValidator(5), MinValueValidator(0)], max_digits=2, decimal_places=1)
     reviews = models.ForeignKey('Review', on_delete=models.CASCADE)
     tags = models.ForeignKey('Tag', on_delete=models.CASCADE)
     timesBought = models.IntegerField(default=0)
