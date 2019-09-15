@@ -123,6 +123,15 @@ class Inventory(models.Model):
     isPublic = models.BinaryField(default=1)
     items = models.ManyToManyField('Item')
     games = models.ManyToManyField('Game')
+# Create Inventory for user when user is created
+@receiver(post_save, sender=User)
+def create_wallet(sender, instance, created, **kwargs):
+    if created:
+        Inventory.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_wallet(sender, instance, **kwargs):
+    instance.inventory.save()
 
 class SellOrder(models.Model):
     itemID = models.ForeignKey('Item', on_delete=models.CASCADE)
