@@ -4,7 +4,7 @@ from django.views.generic import CreateView
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
-
+from .helpers import *
 from .forms import UsersRegisterForm
 from .forms import UsersLoginForm
 from .models import Game,User,Wallet
@@ -12,7 +12,10 @@ from .models import Game,User,Wallet
 
 @login_required(login_url='/accounts/login')
 def index(request):
-	context = {"balance":float(User.objects.get(username=request.user.username).wallet.balance)}
+	context = {
+		"balance":float(User.objects.get(username=request.user.username).wallet.balance),
+		"inventory" : get_inventory(request.user.username)
+		}
 	return render(request, "marketplace/home.html",context)
 
 @login_required(login_url='/accounts/login')

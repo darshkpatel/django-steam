@@ -81,33 +81,19 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <!-- Item Card -->
 
-
-                        <!-- Item Card -->
-                        <div class="col-sm-3">
-                            <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
-                                <div class="card-header">Header</div>
-                                <div class="card-body">
-                                    <h5 class="card-title">Dark card title</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up
-                                        the bulk
-                                        of the card's content.</p>
-                                </div>
-                            </div>
-                        </div>
-
+                        {% for item in inventory %}
                         <!-- Item Card -->
                         <div class="col-sm-3">
                             <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
-                                <div class="card-header">Header</div>
+                                <div class="card-header">{{ item.gameName }}</div>
                                 <div class="card-body">
-                                    <h5 class="card-title">Dark card title</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up
-                                        the bulk of the card's content.</p>
+                                    <h5 class="card-title">{{ item.itemName }}</h5>
+                                    <p class="card-text">{{item.itemDescription}}</p>
                                 </div>
                             </div>
                         </div>
+                        {% endfor %}
 
                     </div>
 

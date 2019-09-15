@@ -107,6 +107,24 @@ def create_wallet(sender, instance, created, **kwargs):
 def save_user_wallet(sender, instance, **kwargs):
     instance.wallet.save()
 
+class Inventory(models.Model):
+# Create Inventory for user when user is created
+    user = models.OneToOneField('User', on_delete=models.CASCADE, unique=True)
+    isPublic = models.BooleanField(default=True)
+    items = models.ManyToManyField('Item')
+    games = models.ManyToManyField('Game')
+    def __str__(self):
+        return "Inventory: " + self.user.username
+    
+@receiver(post_save, sender=User)
+def create_inventory(sender, instance, created, **kwargs):
+    if created:
+        Inventory.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_inventory(sender, instance, **kwargs):
+    instance.inventory.save()
+ 
 class WalletTransaction(models.Model):
     transactionID = models.ForeignKey('Transaction', on_delete=models.CASCADE)
     WalletID = models.ForeignKey('Wallet', on_delete=models.CASCADE)
@@ -118,20 +136,6 @@ class WalletTransaction(models.Model):
     transactionType = models.CharField(choices=CONDITION_CHOICES, max_length=2)
 
 
-class Inventory(models.Model):
-    User = models.ForeignKey('User', on_delete=models.CASCADE)
-    isPublic = models.BinaryField(default=1)
-    items = models.ManyToManyField('Item')
-    games = models.ManyToManyField('Game')
-# Create Inventory for user when user is created
-@receiver(post_save, sender=User)
-def create_wallet(sender, instance, created, **kwargs):
-    if created:
-        Inventory.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_user_wallet(sender, instance, **kwargs):
-    instance.inventory.save()
 
 class SellOrder(models.Model):
     itemID = models.ForeignKey('Item', on_delete=models.CASCADE)
