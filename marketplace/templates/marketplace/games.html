@@ -89,9 +89,7 @@
             {% for game in games %}
 
             <div class="card text-center mb-3" style="width: 18rem;">
-                <div class="card-header text-muted">
-                    {{game.releaseDate}}
-                </div>
+        
                 <img class="d-block w-100" data-src="holder.js/150x150" alt="First slide" />
                 <div class="card-body">
                     <h5 class="card-title">{{game.name}}</h5>
@@ -100,7 +98,9 @@
                     <hr>
                     <a href="#" class="btn btn-primary">Buy Now</a>
                 </div>
-
+                <div class="card-footer text-muted">
+                        Released on {{game.releaseDate}}
+                    </div>
             </div>
         </div>
         {% endfor %}
