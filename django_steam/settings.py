@@ -74,6 +74,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_steam.wsgi.application'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    ]
+STATIC_URL = '/static/'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
