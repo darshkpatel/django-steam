@@ -20,7 +20,10 @@ def index(request):
 
 @login_required(login_url='/accounts/login')
 def games(request):
-	return render(request, "marketplace/games.html")
+	context = {
+		"games" : get_games()
+	}
+	return render(request, "marketplace/games.html", context)
 
 def login_view(request):
 	form = UsersLoginForm(request.POST or None)
