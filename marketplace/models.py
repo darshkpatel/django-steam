@@ -1,15 +1,31 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator, MinLengthValidator, MaxLengthValidator
 from datetime import date
-# Create your models here.
-class User(models.Model):
+from django.contrib.auth.models import User
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     dob = models.DateField()
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField()
     recovery_email = models.EmailField()
     username = models.CharField(max_length=25, unique=True, primary_key=True)
-    password = models.CharField(max_length=100)
+
+# Referenced from https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
+
+
 class Game(models.Model):
     name = models.CharField(unique=True, max_length=40)
     price = models.DecimalField(default=0.0, decimal_places=1, max_digits=5)
@@ -72,7 +88,7 @@ class Item(models.Model):
 
 class Review(models.Model):
     reviewId = models.AutoField(primary_key=True)
-    username = models.ForeignKey('User', on_delete=models.CASCADE)
+    username = models.ForeignKey('Profile', on_delete=models.CASCADE)
     reviewText = models.TextField(validators=[MinLengthValidator(5)])
 
 class Tag(models.Model):
@@ -80,12 +96,12 @@ class Tag(models.Model):
     tag = models.TextField(validators=[MaxLengthValidator(10)])
 
 class Transaction(models.Model):
-    credited_to = models.ForeignKey('User', on_delete=models.CASCADE, related_name='creditor')
-    debited_from = models.ForeignKey('User', on_delete=models.CASCADE, related_name='debitor')
+    credited_to = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='creditor')
+    debited_from = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='debitor')
     amount = models.DecimalField(default=0.0, decimal_places=1, max_digits=5)
     transactionID = models.AutoField(primary_key=True)
 class Wallet(models.Model):
-    foreignKey = models.ForeignKey('User', on_delete=models.CASCADE)
+    foreignKey = models.ForeignKey('Profile', on_delete=models.CASCADE)
     balance = models.DecimalField(default=0.0, decimal_places=1, max_digits=5)
     transactions = models.ManyToManyField(Transaction, through='WalletTransaction')
 
@@ -102,7 +118,7 @@ class WalletTransaction(models.Model):
 
 
 class Inventory(models.Model):
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    Profile = models.ForeignKey('Profile', on_delete=models.CASCADE)
     isPublic = models.BinaryField(default=1)
     items = models.ManyToManyField('Item')
     games = models.ManyToManyField('Game')
@@ -111,13 +127,13 @@ class SellOrder(models.Model):
     itemID = models.ForeignKey('Item', on_delete=models.CASCADE)
     listingDate = models.DateTimeField(auto_now_add=True)
     sellingPrice = models.DecimalField(default=0.0, decimal_places=1, max_digits=5)
-    username = models.ForeignKey('User', on_delete=models.CASCADE)
+    username = models.ForeignKey('Profile', on_delete=models.CASCADE)
     sellorderID = models.AutoField(primary_key=True)
 class BuyOrder(models.Model):
     itemID = models.ForeignKey('Item', on_delete=models.CASCADE)
     listingDate = models.DateTimeField(auto_now_add=True)
     buyPrice = models.DecimalField(default=0.0, decimal_places=1, max_digits=5)
-    username = models.ForeignKey('User', on_delete=models.CASCADE)
+    username = models.ForeignKey('Profile', on_delete=models.CASCADE)
     BuyID = models.AutoField(primary_key=True)
 
 class FullfilledOrder(models.Model):
