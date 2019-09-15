@@ -14,7 +14,8 @@ from .models import Game,User,Wallet
 def index(request):
 	context = {
 		"balance":float(User.objects.get(username=request.user.username).wallet.balance),
-		"inventory" : get_inventory(request.user.username)
+		"items" : get_inventory_items(request.user.username),
+		"games" : list(User.objects.get(username=request.user.username).inventory.games.all().values('description','name'))
 		}
 	return render(request, "marketplace/home.html",context)
 

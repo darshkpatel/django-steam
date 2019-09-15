@@ -44,11 +44,11 @@
 <div class="container-fluid">
 
     <!-- Wallet Card -->
-    <div class="row d-flex p-2 border-top">
+    <div class="row d-flex p-2">
         <div class="col">
 
             <div class="card ">
-                <h5 class="card-header">My Wallet</h5>
+                <h4 class="card-header"><bold>My Wallet</bold></h4>
                 <div class="card-body">
                     <div class="row">
 
@@ -72,17 +72,35 @@
     </div>
 
     <!-- Inventory Jumbo Card -->
-    <div class="row d-flex p-2 border-top">
+    <div class="row d-flex p-2">
         <div class="col">
 
             <div class="card">
                 <div class="card-header">
-                    <h4> My Inventory </h4>
+                    <h4> <bold>My Inventory </bold></h4>
                 </div>
                 <div class="card-body">
+                    <h4>Games</h4><hr>
                     <div class="row">
 
-                        {% for item in inventory %}
+                        {% for game in games %}
+                        <!-- Item Card -->
+                        <div class="col-sm-3">
+                            <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ game.name }}</h5>
+                                    <p class="card-text">{{game.description}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+
+                    <h4>Items</h4><hr>
+                    <div class="row">
+
+                        {% for item in items %}
                         <!-- Item Card -->
                         <div class="col-sm-3">
                             <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
