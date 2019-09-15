@@ -1,15 +1,16 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator, MinLengthValidator, MaxLengthValidator
 from datetime import date
+from django.contrib.auth.models import AbstractUser
+
 # Create your models here.
-class User(models.Model):
-    dob = models.DateField()
+class User(AbstractUser):
+    dob = models.DateField(null=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField()
     recovery_email = models.EmailField()
     username = models.CharField(max_length=25, unique=True, primary_key=True)
-    password = models.CharField(max_length=100)
 class Game(models.Model):
     name = models.CharField(unique=True, max_length=40)
     price = models.DecimalField(default=0.0, decimal_places=1, max_digits=5)
@@ -85,7 +86,7 @@ class Transaction(models.Model):
     amount = models.DecimalField(default=0.0, decimal_places=1, max_digits=5)
     transactionID = models.AutoField(primary_key=True)
 class Wallet(models.Model):
-    foreignKey = models.ForeignKey('User', on_delete=models.CASCADE)
+    foreignKey = models.OneToOneField('User', on_delete=models.CASCADE, unique=True)
     balance = models.DecimalField(default=0.0, decimal_places=1, max_digits=5)
     transactions = models.ManyToManyField(Transaction, through='WalletTransaction')
 

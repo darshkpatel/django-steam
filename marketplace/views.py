@@ -7,12 +7,13 @@ from django.contrib.auth.decorators import login_required
 
 from .forms import UsersRegisterForm
 from .forms import UsersLoginForm
-from .models import Game,User
+from .models import Game,User,Wallet
 # Create your views here.
 
 @login_required(login_url='/accounts/login')
 def index(request):
-	return render(request, "marketplace/home.html")
+	context = {"balance":float(User.objects.get(username=request.user.username).wallet.balance)}
+	return render(request, "marketplace/home.html",context)
 
 @login_required(login_url='/accounts/login')
 def games(request):
