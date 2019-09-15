@@ -12,7 +12,11 @@ from .models import Game,User
 
 @login_required(login_url='/accounts/login')
 def index(request):
-	return HttpResponse("Hello, {}. You're at the marketplace index.".format(request.user.username))
+	return render(request, "marketplace/home.html")
+
+@login_required(login_url='/accounts/login')
+def games(request):
+	return render(request, "marketplace/games.html")
 
 def login_view(request):
 	form = UsersLoginForm(request.POST or None)
