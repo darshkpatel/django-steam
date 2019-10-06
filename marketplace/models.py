@@ -95,8 +95,10 @@ class Transaction(models.Model):
     transactionID = models.AutoField(primary_key=True)
 class Wallet(models.Model):
     user = models.OneToOneField('User', on_delete=models.CASCADE, unique=True)
-    balance = models.DecimalField(default=0.0, decimal_places=1, max_digits=5)
+    balance = models.DecimalField(default=0.0, decimal_places=1, max_digits=30)
     transactions = models.ManyToManyField(Transaction, through='WalletTransaction')
+    def __str__(self):
+        return self.user.username
 # Create wallet for user when user is created
 @receiver(post_save, sender=User)
 def create_wallet(sender, instance, created, **kwargs):
