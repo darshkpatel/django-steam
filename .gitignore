@@ -4,3 +4,4 @@ __pycache__
 *.pycache
 .vscode
 db.sqlite3
+marketplace/migrations
