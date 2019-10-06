@@ -1,4 +1,4 @@
-from .models import *
+from marketplace.models import *
 from datetime import datetime
 
 """ 

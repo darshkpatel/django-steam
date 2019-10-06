@@ -82,6 +82,19 @@
 
         </div>
     </div>
+    
+      <!-- Django Flash Message Code  -->
+      {% if messages %}
+      <ul class="messages" style="list-style-type:none">
+          {% for msg in messages %}       
+          <li>
+              <div class="alert alert-{{msg.level_tag}}" role="alert">
+              {{msg.message}}
+              </div>
+          </li>
+          {% endfor %}
+      </ul>
+      {% endif %}
 
     <div class="row align-items-center" style="padding-left: 10%;">
         <div class="col-sm-4">
