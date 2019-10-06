@@ -1,0 +1,143 @@
+{% extends "marketplace/base.html" %}
+
+
+{% block head %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">SteamStore</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+        aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'games' %}">Games</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'market' %}">Marketplace</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">My Listings</a>
+            </li>
+        </ul>
+
+        <div class="pull-right">
+            <ul class="nav pull-right">
+                <li class="dropdown"><a href="#" style="color: #ffff" class="dropdown-toggle"
+                        data-toggle="dropdown">Welcome, {{request.user.username}} <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a style="color: red; padding:10px;" href="/logout"><i class="icon-off"></i> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</nav>
+{% endblock head %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <div class="row">
+
+        <!-- Wallet Card -->
+        <div class="col d-flex p-2">
+            <div class="col">
+
+                <div class="card ">
+                    <h4 class="card-header">
+                        <bold>My Wallet</bold>
+                    </h4>
+                    <div class="card-body">
+                        <div class="row">
+
+                            <div class="col-xl-3">
+                                <i style="padding:30px;" class="fa fa-wallet fa-5x"></i>
+                            </div>
+                            <div class="col">
+                                <h5 class="card-title text-bold">Wallet Balance: </h5>
+                                <strong>
+                                    <h1>
+                                        <small>INR.</small> {{ balance }}
+                                    </h1>
+                                </strong>
+                                <a href="#" class="btn btn-primary">View Details</a>
+                                <br>
+                                <br>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Inventory Jumbo Card -->
+        <div class="col d-flex p-2">
+            <div class="col">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4> My Inventory </h4>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            {% for item in items %}
+                            <!-- Item Card -->
+                            <div class="col-sm-4">
+                                <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+                                    <div class="card-header">{{ item.gameName }}</div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ item.itemName }}</h5>
+                                        <p class="card-text">{{item.itemDescription}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            </div>
+            </div>
+
+
+            <div class="row">
+
+<div class="col">
+
+
+                <table class="table table-striped table-bordered" id="example">
+
+                </table>
+</div>
+            </div>
+            <script type="text/javascript" language="javascript" class="init">
+                $(document).ready(function () {
+                    $('#example').dataTable({
+                        "processing": true,
+                        "ajax": {
+                            "processing": true,
+                            "url": "{% url 'market-table' %}",
+                            "dataSrc": ""
+                        },
+
+                        "columns": [
+                            { "data": "fields.itemName" },
+                            { "data": "fields.itemDescription" },
+                        ]
+                    });
+                });
+            </script>
+            {% endblock content %}
+
