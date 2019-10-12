@@ -16,18 +16,17 @@ class User(AbstractUser):
 class Game(models.Model):
     name = models.CharField(unique=True, max_length=40, primary_key=True)
     price = models.DecimalField(default=0.0, decimal_places=1, max_digits=5)
-    # gameID = models.AutoField(primary_key=True)
     timesBought = models.IntegerField(default=0)
     releaseDate = models.DateField(default=date.today)
     description = models.TextField()
     ageRating = models.IntegerField(default=7)
-    stars = models.DecimalField(validators=[MaxValueValidator(5), MinValueValidator(0)], max_digits=2, decimal_places=1)
     def __str__(self):
         return self.name
     
 class GameReview(models.Model):
-    review = models.ForeignKey('Review', on_delete=models.CASCADE)
+    review = models.ForeignKey('Review', on_delete=models.CASCADE, primary_key=True)
     name = models.ForeignKey('Game', on_delete=models.CASCADE)
+    stars = models.DecimalField(validators=[MaxValueValidator(5), MinValueValidator(0)], max_digits=2, decimal_places=1)
     class Meta:
          unique_together = ('review', 'name')
 
@@ -36,34 +35,38 @@ class GameTags(models.Model):
     tag = models.ForeignKey('Tag', on_delete=models.CASCADE)
     gameID = models.ForeignKey('Game', on_delete=models.CASCADE)
     class Meta:
-         unique_together = ('tag', 'gameID')
+         unique_together = ['tag', 'gameID']
 
 class DLC(models.Model):
-    DLCid = models.AutoField(primary_key=True)
-    name = models.CharField(unique=True, max_length=50)
+    name = models.CharField(unique=True, max_length=50, primary_key=True)
     ageRating = models.IntegerField(default=7)
-    stars = models.DecimalField(validators=[MaxValueValidator(5), MinValueValidator(0)], max_digits=2, decimal_places=1)
-    reviews = models.ForeignKey('Review', on_delete=models.CASCADE)
-    tags = models.ForeignKey('Tag', on_delete=models.CASCADE)
-    timesBought = models.IntegerField(default=0)
+    description = models.TextField()
+
+    # stars = models.DecimalField(validators=[MaxValueValidator(5), MinValueValidator(0)], max_digits=2, decimal_places=1)
+    # reviews = models.ForeignKey('Review', on_delete=models.CASCADE)
+    # tags = models.ForeignKey('Tag', on_delete=models.CASCADE)
     def __str__(self):
         return self.name
 class gameDLC(models.Model):
-    gameID = models.ForeignKey('Game', on_delete=models.CASCADE)
+    gameID = models.ForeignKey('Game', on_delete=models.CASCADE, primary_key=True)
     DLCid = models.ForeignKey('DLC', on_delete=models.CASCADE)
+    timesBought = models.IntegerField(default=0)
     class Meta:
          unique_together = ('gameID', 'DLCid')
 class DLCReview(models.Model):
-    review = models.ForeignKey('Review', on_delete=models.CASCADE)
-    DLCid = models.ForeignKey('DLC', on_delete=models.CASCADE)
+    review = models.ForeignKey('Review', on_delete=models.CASCADE, primary_key=True)
+    DLCname = models.ForeignKey('DLC', on_delete=models.CASCADE)
+    stars = models.DecimalField(validators=[MaxValueValidator(5), MinValueValidator(0)], max_digits=2, decimal_places=1, null=False)
+    compatibility = models.DecimalField(validators=[MaxValueValidator(5), MinValueValidator(0)], max_digits=2, decimal_places=1, null=True)
+
     class Meta:
-         unique_together = ('review', 'DLCid')
+         unique_together = ['review', 'DLCname']
 
 class DLCTags(models.Model):
     tag = models.ForeignKey('Tag', on_delete=models.CASCADE)
     DLCid = models.ForeignKey('DLC', on_delete=models.CASCADE)
     class Meta:
-         unique_together = ('tag', 'DLCid')
+         unique_together = (('tag', 'DLCid'),)
 
 class Item(models.Model):
     itemID = models.AutoField(primary_key=True)
