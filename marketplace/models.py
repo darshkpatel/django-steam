@@ -14,9 +14,9 @@ class User(AbstractUser):
     username = models.CharField(max_length=25, unique=True, primary_key=True)
 
 class Game(models.Model):
-    name = models.CharField(unique=True, max_length=40)
+    name = models.CharField(unique=True, max_length=40, primary_key=True)
     price = models.DecimalField(default=0.0, decimal_places=1, max_digits=5)
-    gameID = models.AutoField(primary_key=True)
+    # gameID = models.AutoField(primary_key=True)
     timesBought = models.IntegerField(default=0)
     releaseDate = models.DateField(default=date.today)
     description = models.TextField()
@@ -27,9 +27,11 @@ class Game(models.Model):
     
 class GameReview(models.Model):
     review = models.ForeignKey('Review', on_delete=models.CASCADE)
-    gameID = models.ForeignKey('Game', on_delete=models.CASCADE)
+    name = models.ForeignKey('Game', on_delete=models.CASCADE)
     class Meta:
-         unique_together = ('review', 'gameID')
+         unique_together = ('review', 'name')
+
+
 class GameTags(models.Model):
     tag = models.ForeignKey('Tag', on_delete=models.CASCADE)
     gameID = models.ForeignKey('Game', on_delete=models.CASCADE)
@@ -82,6 +84,8 @@ class Review(models.Model):
     reviewId = models.AutoField(primary_key=True)
     username = models.ForeignKey('User', on_delete=models.CASCADE)
     reviewText = models.TextField(validators=[MinLengthValidator(5)])
+    time = models.DateTimeField(auto_now_add=True)
+
 
 class Tag(models.Model):
     tagId = models.AutoField(primary_key=True)
@@ -94,7 +98,7 @@ class Transaction(models.Model):
     amount = models.DecimalField(default=0.0, decimal_places=1, max_digits=5)
     transactionID = models.AutoField(primary_key=True)
 class Wallet(models.Model):
-    user = models.OneToOneField('User', on_delete=models.CASCADE, unique=True)
+    user = models.OneToOneField('User', on_delete=models.CASCADE, unique=True, primary_key=True)
     balance = models.DecimalField(default=0.0, decimal_places=1, max_digits=30)
     transactions = models.ManyToManyField(Transaction, through='WalletTransaction')
     def __str__(self):
@@ -111,7 +115,7 @@ def save_user_wallet(sender, instance, **kwargs):
 
 class Inventory(models.Model):
 # Create Inventory for user when user is created
-    user = models.OneToOneField('User', on_delete=models.CASCADE, unique=True)
+    user = models.OneToOneField('User', on_delete=models.CASCADE, unique=True, primary_key=True)
     isPublic = models.BooleanField(default=True)
     items = models.ManyToManyField('Item')
     games = models.ManyToManyField('Game')
@@ -128,8 +132,8 @@ def save_user_inventory(sender, instance, **kwargs):
     instance.inventory.save()
  
 class WalletTransaction(models.Model):
-    transactionID = models.ForeignKey('Transaction', on_delete=models.CASCADE)
-    WalletID = models.ForeignKey('Wallet', on_delete=models.CASCADE)
+    transactionID = models.OneToOneField('Transaction', on_delete=models.CASCADE, primary_key=True)
+    WalletUser = models.ForeignKey('Wallet', on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True)
     CONDITION_CHOICES = [
     ('CR', 'Credit'),
