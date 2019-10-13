@@ -7,6 +7,8 @@ def market(request):
 	context = {
 		"balance":float(User.objects.get(username=request.user.username).wallet.balance),
 		"items" : get_inventory_items(request.user.username),
+		"sell" :get_sell_orders(),
+		"buy" :get_buy_orders(),
 		}
 	return render(request, "marketplace/market.html",context)
 

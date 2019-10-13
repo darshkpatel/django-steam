@@ -48,11 +48,13 @@ class DLC(models.Model):
     def __str__(self):
         return self.name
 class gameDLC(models.Model):
-    gameID = models.ForeignKey('Game', on_delete=models.CASCADE, primary_key=True)
+    gameID = models.ForeignKey('Game', on_delete=models.CASCADE)
     DLCid = models.ForeignKey('DLC', on_delete=models.CASCADE)
     timesBought = models.IntegerField(default=0)
     class Meta:
          unique_together = ('gameID', 'DLCid')
+    def __str__(self):
+        return self.DLCid.name
 class DLCReview(models.Model):
     review = models.ForeignKey('Review', on_delete=models.CASCADE, primary_key=True)
     DLCname = models.ForeignKey('DLC', on_delete=models.CASCADE)
