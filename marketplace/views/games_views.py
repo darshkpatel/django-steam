@@ -26,6 +26,8 @@ def index(request):
         user_wallet.balance = user_wallet.balance - game.price
         user_inventory.games.add(game)
 
+
+        #Commits to DB
         user_inventory.save()
         user_wallet.save(update_fields=['balance'])
 

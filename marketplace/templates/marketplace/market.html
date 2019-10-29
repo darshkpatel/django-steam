@@ -97,7 +97,22 @@
                                     <div class="card-header">{{ item.gameName }}</div>
                                     <div class="card-body">
                                         <h5 class="card-title">{{ item.itemName }}</h5>
-                                        <p class="card-text">{{item.itemDescription}}</p>
+                                        <!-- <p class="card-text">{{item.itemDescription}}</p> -->
+                                        <a href="market/sell?sell_thing={{item.itemName}}" class="btn btn-primary">Sell</a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            
+                            {% for game in games %}
+                            <!-- Item Card -->
+                            <div class="col-sm-3">
+                                <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ game.name }}</h5>
+                                        <p class="card-text">{{game.description}}</p>
+                                        <a href="market/sell?sell_thing={{game.name}}" class="btn btn-primary">Sell</a>
+
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +125,18 @@
             </div>
         </div>
     </div>
-
+      <!-- Django Flash Message Code  -->
+      {% if messages %}
+      <ul class="messages" style="list-style-type:none">
+          {% for msg in messages %}       
+          <li>
+              <div class="alert alert-{{msg.level_tag}}" role="alert">
+              {{msg.message}}
+              </div>
+          </li>
+          {% endfor %}
+      </ul>
+      {% endif %}
 
     <div class="row">
 
@@ -202,7 +228,9 @@
                         "processing": true,
                         "ajax": {
                             "processing": true,
-                            "url": "{% url 'market-table' %}",
+                            
+                            Chaange to market-table if using again 
+                            "url": "{% url 'market' %}",
                             "dataSrc": ""
                         },
 

@@ -5,7 +5,11 @@ urlpatterns = [
     path('', user_dashboard_views.index, name='index'),
     path('games', games_views.index, name='games'),
     path('market', marketplace_views.market, name='market'),
-    path('market_table', marketplace_views.table, name='market-table'),
+    path('market/sell', marketplace_views.sell, name='market_sell'),
+    path('market/buy', marketplace_views.buy, name='market_buy'),
+
+    # Depriciated
+    # path('market_table', marketplace_views.table, name='market-table'),
 
     path("login/", auth_views.login_view, name = "login"),
     path("logout/", auth_views.login_view, name = "logout"),
