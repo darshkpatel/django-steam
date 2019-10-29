@@ -41,6 +41,7 @@ def get_sell_orders():
         order.update({'sellingPrice': str(order['sellingPrice'])})
         order.update({'itemCondition': item_codes[order['itemCondition']]})
     return sell_orders
+    
 def get_buy_orders():
     item_codes = {'FN':'Factory New',
                     'FT':'Field Tested',

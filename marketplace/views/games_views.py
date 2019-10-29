@@ -24,6 +24,8 @@ def index(request):
 
 
         user_wallet.balance = user_wallet.balance - game.price
+        #Todo: Add to wallet transaction2
+        # txn = WalletTransaction()
         user_inventory.games.add(game)
 
 
