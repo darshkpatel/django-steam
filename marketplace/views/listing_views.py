@@ -25,6 +25,7 @@ def mylistings(request):
 	context = {
 		"balance":float(User.objects.get(username=request.user.username).wallet.balance),
 		"items" : get_inventory_items(request.user.username),
+		"all_items" : [get_item_details(itm['itemID']) for itm in Item.objects.all().values()],
 		"sell" :get_sell_orders(),
 		"buy" :get_buy_orders(),
 		}

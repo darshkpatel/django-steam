@@ -40,41 +40,12 @@ def market(request):
 #     json = serializers.serialize('json', object_list)
 #     return HttpResponse(json, content_type='application/json')
 
-@login_required(login_url='/accounts/login')
-def sell(request):
-	sell_thing = request.GET.get('sell_thing', None)
-	
-	
-	if sell_thing:
-		# Locks the selected entry for update
-		user = User.objects.get(username=request.user.username)
-		user_inventory = Inventory.objects.select_for_update().get(user=request.user.username)
-		user_wallet = Wallet.objects.select_for_update().get(user=request.user.username)
-		item = user_inventory.items.get(itemName=sell_thing)
-		if item:
-
-			# txn = WalletTransaction()	
-			sell_order = SellOrder(itemID=item, sellingPrice=10, username=user)
-			sell_order.save()
-			messages.info(request,"Item listed on the community market")
-			return HttpResponseRedirect(reverse('market'))	
-
-		else:
-			messages.warning(request,"You don't own the item or game")
-			return HttpResponseRedirect(reverse('market'))	
-
-	else:
-		messages.warning(request,"You don't own the item or game")
-		return HttpResponseRedirect(reverse('market'))			
-		
-
-	return HttpResponseRedirect(reverse('market'))
-
-
 
 @login_required(login_url='/accounts/login')
 def buy(request):
 	buy_thing = request.GET.get('buy_thing', None)
+	price = float(request.GET.get('price', None))
+	seller = request.GET.get('seller', None)
 
 
 	if buy_thing:
@@ -82,12 +53,39 @@ def buy(request):
 
 		# Locks the selected entry for update
 		user_inventory = Inventory.objects.select_for_update().get(user=request.user.username)
-		user_wallet = Wallet.objects.select_for_update().get(user=request.user.username)
+		buyer_wallet = Wallet.objects.select_for_update().get(user=request.user.username)
+		seller_wallet = Wallet.objects.select_for_update().get(user=seller)
 
-		if (buy_thing not in user_inventory.games.all()) or (buy_thing not in user_inventory.items.all()):
-			pass
-		else:
-			messages.warning(request,"You already own the item or game")
+		if not user_inventory.items.filter(itemName=buy_thing) and seller!=request.user.username:
+
+			#Transaction process
+
+			#Debit buyer, credit seller 
+			if(float(user_balance)>=float(price)):
+				buyer_wallet.balance = float(buyer_wallet.balance) - price
+				seller_wallet.balance = float(seller_wallet.balance) + price
+
+				item = Item.objects.get(itemName=buy_thing)
+				user_inventory.items.add(item)
+
+				SellOrder.objects.filter(itemID__itemName=buy_thing,username=seller).delete()
+
+
+				buyer_wallet.save(update_fields=['balance'])
+				seller_wallet.save(update_fields=['balance'])
+
+				
+
+			else:
+				messages.warning(request,"Insufficient Balance")
+				return HttpResponseRedirect(reverse('market'))			
+
+			#Remove Sell Order
+
+			messages.warning(request,"Bought")
 			return HttpResponseRedirect(reverse('market'))			
+		else:
+			messages.warning(request,"You already own the item or You're the seller")
+			return HttpResponseRedirect(reverse('market'))	
 		
 	return HttpResponseRedirect(reverse('market'))

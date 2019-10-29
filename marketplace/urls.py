@@ -7,7 +7,7 @@ urlpatterns = [
     path('market', marketplace_views.market, name='market'),
     path('listings', listing_views.mylistings, name='listings'),
     path('market/sell', listing_views.sell, name='market_sell'),
-    path('market/buy', listing_views.buy, name='market_buy'),
+    path('market/buy', marketplace_views.buy, name='market_buy'),
     path('listings/delete', listing_views.delete_inv, name='delete_inv'),
 
     # Depriciated

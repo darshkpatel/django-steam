@@ -157,24 +157,28 @@
                         <td>@mdo</td>
                     </tr> -->
                     {% for order in sell %}
+                    <form method="GET" action="market/buy"
                     <tr>
-
+                            <input type="hidden" name="buy_thing" value="{{order.itemName}}">
+                            <input type="hidden" name="price" value="{{order.sellingPrice}}">
+                            <input type="hidden" name="seller" value="{{order.username_id}}">
                             <th scope="col">{{order.itemGame}}</th>
                             <th scope="col">{{order.itemName}}</th>
                             <th scope="col">{{order.username_id}}</th>
                             <th scope="col">{{order.listingDate}}</th>
                             <th scope="col">{{order.itemCondition}}</th>
                             <th scope="col">{{order.sellingPrice}}</th>
-                            <th scope="col"><a href="#" class="btn btn-primary">Buy</a></th>
+                            <th scope="col"><button type="submit" class="btn btn-primary">Buy</button></th>
             
 
                     </tr>
+                    </form>
                     {% endfor %}
                 </tbody>
             </table>
             <table class="table">
                 <thead>
-                    <h1>Unfuliflled Buy Orders</h1>
+                    <h1>Buy Orders</h1>
                     <tr>
                         <th scope="col">Game</th>
                         <th scope="col">Item</th>

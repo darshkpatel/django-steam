@@ -44,7 +44,18 @@
 <div class="container-fluid">
 
 
-
+      <!-- Django Flash Message Code  -->
+      {% if messages %}
+      <ul class="messages" style="list-style-type:none">
+          {% for msg in messages %}       
+          <li>
+              <div class="alert alert-{{msg.level_tag}}" role="alert">
+              {{msg.message}}
+              </div>
+          </li>
+          {% endfor %}
+      </ul>
+      {% endif %}s
 
 
         <!-- Inventory Jumbo Card -->
@@ -81,7 +92,7 @@
                                         <th scope="col">{{order.gameName }}</th>
                                         <th scope="col">{{order.itemName}}</th>
                                         <th scope="col">{{request.user.username}}</th>
-                                        <th scope="col">Today</th>
+                                        <th scope="col">Now</th>
                                         <th scope="col"><input name="price" type="number" placeholder="Minimum Selling Price"></th>
                                         <th scope="col"><button type="submit" class="btn btn-primary">Place Sell Order</button></th>
                         
@@ -144,18 +155,7 @@
                     </div>
 
     </div>
-      <!-- Django Flash Message Code  -->
-      {% if messages %}
-      <ul class="messages" style="list-style-type:none">
-          {% for msg in messages %}       
-          <li>
-              <div class="alert alert-{{msg.level_tag}}" role="alert">
-              {{msg.message}}
-              </div>
-          </li>
-          {% endfor %}
-      </ul>
-      {% endif %}
+
 
     <div class="row">
 
@@ -210,6 +210,50 @@
 
 
 
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h4> Place Buy Order </h4>
+                </div>
+                <div class="card-body">
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Game</th>
+                                <th scope="col">Item</th>
+                                <!-- <th scope="col">Seller</th> -->
+                                <!-- <th scope="col">Date Listed</th> -->
+                                <th scope="col">Condition</th>
+                                <th scope="col">Max Price(INR)</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        
+                            {% for item in all_items %}
+                            <form action="/listings/delete" method="GET">
+                            <tr>
+                                    <th scope="col">{{item.itemGame}}</th>
+                                    <th scope="col">{{item.itemName}}</th>
+                                    <th scope="col">{{item.itemCondition}}</th>
+                                    <th scope="col"><input type="number" name="price"></th>
+                                    <input type="hidden" name="list_thing" value="{{order.itemName}}">
+                                    <th scope="col"><button type="submit" class="btn btn-primary btn-small">Place Buy Order</button></th>
+                    
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+
+</div>
         </div>
     </div>
     <!-- <script type="text/javascript" language="javascript" class="init">
