@@ -192,6 +192,7 @@
                                     <td>@mdo</td>
                                 </tr> -->
                                 {% for border in buy %}
+                                {% if border.username_id == request.user.username %}
                                 <form method="GET" action="/listings/buyOrder_delete">
                                 <tr>
             
@@ -205,6 +206,7 @@
                                         <th scope="col"><button type="submit" class="btn btn-danger">Delete</button></th>
                                 </tr>
                                 </form>
+                                {% endif %}
                                 {% endfor %}
                             </tbody>
                         </table>

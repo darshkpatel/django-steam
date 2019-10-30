@@ -157,7 +157,7 @@
                         <td>@mdo</td>
                     </tr> -->
                     {% for order in sell %}
-                    <form method="GET" action="market/buy"
+                    <form method="GET" action="market/buy">
                     <tr>
                             <input type="hidden" name="buy_thing" value="{{order.itemName}}">
                             <input type="hidden" name="price" value="{{order.sellingPrice}}">

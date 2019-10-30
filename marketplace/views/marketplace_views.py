@@ -2,24 +2,6 @@ from marketplace.common_imports import *
 from django.core import serializers
 
 
-
-def process_buy_order(order):
-	pass
-
-def process_sell_order(order):
-	pass
-
-def log_order(order):
-	pass
-
-def find_matching_sell(order):
-	pass
-
-def find_matching_buy(order):
-	pass
-
-
-
 @login_required(login_url='/accounts/login')
 def market(request):
 	context = {
@@ -49,43 +31,44 @@ def buy(request):
 
 
 	if buy_thing:
-		user_balance = Wallet.objects.get(user=request.user.username).balance
+		with transaction.atomic():
+			user_balance = Wallet.objects.get(user=request.user.username).balance
 
-		# Locks the selected entry for update
-		user_inventory = Inventory.objects.select_for_update().get(user=request.user.username)
-		buyer_wallet = Wallet.objects.select_for_update().get(user=request.user.username)
-		seller_wallet = Wallet.objects.select_for_update().get(user=seller)
+			# Locks the selected entry for update
+			user_inventory = Inventory.objects.select_for_update().get(user=request.user.username)
+			buyer_wallet = Wallet.objects.select_for_update().get(user=request.user.username)
+			seller_wallet = Wallet.objects.select_for_update().get(user=seller)
 
-		if not user_inventory.items.filter(itemName=buy_thing) and seller!=request.user.username:
+			if not user_inventory.items.filter(itemName=buy_thing) and seller!=request.user.username:
 
-			#Transaction process
+				#Transaction process
 
-			#Debit buyer, credit seller 
-			if(float(user_balance)>=float(price)):
-				buyer_wallet.balance = float(buyer_wallet.balance) - price
-				seller_wallet.balance = float(seller_wallet.balance) + price
+				#Debit buyer, credit seller 
+				if(float(user_balance)>=float(price)):
+					buyer_wallet.balance = float(buyer_wallet.balance) - price
+					seller_wallet.balance = float(seller_wallet.balance) + price
 
-				item = Item.objects.get(itemName=buy_thing)
-				user_inventory.items.add(item)
+					item = Item.objects.get(itemName=buy_thing)
+					user_inventory.items.add(item)
 
-				SellOrder.objects.filter(itemID__itemName=buy_thing,username=seller).delete()
+					SellOrder.objects.filter(itemID__itemName=buy_thing,username=seller).delete()
 
 
-				buyer_wallet.save(update_fields=['balance'])
-				seller_wallet.save(update_fields=['balance'])
+					buyer_wallet.save(update_fields=['balance'])
+					seller_wallet.save(update_fields=['balance'])
 
-				
+					
 
-			else:
-				messages.warning(request,"Insufficient Balance")
+				else:
+					messages.warning(request,"Insufficient Balance")
+					return HttpResponseRedirect(reverse('market'))			
+
+				#Remove Sell Order
+
+				messages.warning(request,"Bought")
 				return HttpResponseRedirect(reverse('market'))			
-
-			#Remove Sell Order
-
-			messages.warning(request,"Bought")
-			return HttpResponseRedirect(reverse('market'))			
-		else:
-			messages.warning(request,"You already own the item or You're the seller")
-			return HttpResponseRedirect(reverse('market'))	
+			else:
+				messages.warning(request,"You already own the item or You're the seller")
+				return HttpResponseRedirect(reverse('market'))	
 		
 	return HttpResponseRedirect(reverse('market'))
