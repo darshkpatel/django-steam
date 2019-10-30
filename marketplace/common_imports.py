@@ -9,4 +9,4 @@ from django.http import HttpResponse, HttpResponseRedirect
 from marketplace.views.helpers import *
 from marketplace.forms import UsersRegisterForm
 from marketplace.forms import UsersLoginForm
-from marketplace.models import Game,User,Wallet, Inventory, SellOrder, BuyOrder, WalletTransaction
+from marketplace.models import Game,User,Wallet, Inventory, SellOrder, BuyOrder, WalletTransaction, BuyOrder

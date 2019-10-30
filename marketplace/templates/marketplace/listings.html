@@ -55,7 +55,7 @@
           </li>
           {% endfor %}
       </ul>
-      {% endif %}s
+      {% endif %}
 
 
         <!-- Inventory Jumbo Card -->
@@ -181,6 +181,7 @@
                                     <th scope="col">Date Listed</th>
                                     <th scope="col">Condition</th>
                                     <th scope="col">Price(INR)</th>
+                                    <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -191,6 +192,7 @@
                                     <td>@mdo</td>
                                 </tr> -->
                                 {% for border in buy %}
+                                <form method="GET" action="/listings/buyOrder_delete">
                                 <tr>
             
                                         <th scope="col">{{border.itemGame}}</th>
@@ -199,7 +201,10 @@
                                         <th scope="col">{{border.listingDate}}</th>
                                         <th scope="col">{{border.itemCondition}}</th>
                                         <th scope="col">{{border.buyPrice}}</th>
+                                        <input type="hidden" name="list_thing" value="{{border.itemName}}">
+                                        <th scope="col"><button type="submit" class="btn btn-danger">Delete</button></th>
                                 </tr>
+                                </form>
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -237,16 +242,18 @@
                         <tbody>
                         
                             {% for item in all_items %}
-                            <form action="/listings/delete" method="GET">
+                            <form action="/listings/buyOrder" method="GET">
                             <tr>
+                                    <input type="hidden" name="list_thing" value="{{item.itemName}}">
+
                                     <th scope="col">{{item.itemGame}}</th>
                                     <th scope="col">{{item.itemName}}</th>
                                     <th scope="col">{{item.itemCondition}}</th>
                                     <th scope="col"><input type="number" name="price"></th>
-                                    <input type="hidden" name="list_thing" value="{{order.itemName}}">
                                     <th scope="col"><button type="submit" class="btn btn-primary btn-small">Place Buy Order</button></th>
                     
                             </tr>
+                            </form>
                             {% endfor %}
                         </tbody>
                     </table>

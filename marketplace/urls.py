@@ -9,6 +9,8 @@ urlpatterns = [
     path('market/sell', listing_views.sell, name='market_sell'),
     path('market/buy', marketplace_views.buy, name='market_buy'),
     path('listings/delete', listing_views.delete_inv, name='delete_inv'),
+    path('listings/buyOrder', listing_views.buy_order, name='buy_order'),
+    path('listings/buyOrder_delete', listing_views.delete_buy_order, name='buy_order_delete'),
 
     # Depriciated
     # path('market_table', marketplace_views.table, name='market-table'),

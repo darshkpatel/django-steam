@@ -125,3 +125,44 @@ def buy(request):
 			return HttpResponseRedirect(reverse('market'))			
 		
 	return HttpResponseRedirect(reverse('market'))
+
+@login_required(login_url='/accounts/login')
+def buy_order(request):
+	buy_thing = request.GET.get('list_thing', None)
+	price = request.GET.get('price', None)
+	print("Started",buy_thing)
+	if buy_thing:
+		user_balance = Wallet.objects.get(user=request.user.username).balance
+		print("Inside")
+		# Locks the selected entry for update
+		user_inventory = Inventory.objects.select_for_update().get(user=request.user.username)
+		user_wallet = Wallet.objects.select_for_update().get(user=request.user.username)
+
+		if not user_inventory.items.filter(itemName=buy_thing):
+			item_id = Item.objects.get(itemName=buy_thing)
+			buy_obj = BuyOrder(itemID=item_id, buyPrice=price, username=User.objects.get(username=request.user.username))
+			buy_obj.save()
+			messages.info(request,"Buy Order Added")
+			return HttpResponseRedirect(reverse('listings'))			
+
+		else:
+			messages.warning(request,"You already own the item")
+			return HttpResponseRedirect(reverse('listings'))			
+		
+	return HttpResponseRedirect(reverse('listings'))
+
+@login_required(login_url='/accounts/login')
+def delete_buy_order(request):
+	list_thing = request.GET.get('list_thing', None)
+	if list_thing:
+		user_balance = Wallet.objects.get(user=request.user.username).balance
+		print("Inside")
+		# Locks the selected entry for update
+		user_inventory = Inventory.objects.select_for_update().get(user=request.user.username)
+		user_wallet = Wallet.objects.select_for_update().get(user=request.user.username)
+
+		BuyOrder.objects.filter(itemID__itemName=list_thing,username=request.user.username).delete()
+		messages.info(request,"Buy Order Removed")
+		return HttpResponseRedirect(reverse('listings'))			
+
+	return HttpResponseRedirect(reverse('listings'))
