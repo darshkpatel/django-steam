@@ -21,7 +21,7 @@
                 <a class="nav-link" href="{% url 'market' %}">Marketplace</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">My Listings</a>
+                <a class="nav-link" href="{% url 'listings' %}">My Listings</a>
             </li>
         </ul>
 
@@ -97,11 +97,14 @@
                                     <div class="card-header">{{ item.gameName }}</div>
                                     <div class="card-body">
                                         <h5 class="card-title">{{ item.itemName }}</h5>
-                                        <p class="card-text">{{item.itemDescription}}</p>
+                                        <!-- <p class="card-text">{{item.itemDescription}}</p> -->
+                                        <!-- <a href="market/sell?sell_thing={{item.itemName}}" class="btn btn-primary">Sell</a> -->
                                     </div>
                                 </div>
                             </div>
                             {% endfor %}
+                            
+    
 
                         </div>
 
@@ -110,7 +113,18 @@
             </div>
         </div>
     </div>
-
+      <!-- Django Flash Message Code  -->
+      {% if messages %}
+      <ul class="messages" style="list-style-type:none">
+          {% for msg in messages %}       
+          <li>
+              <div class="alert alert-{{msg.level_tag}}" role="alert">
+              {{msg.message}}
+              </div>
+          </li>
+          {% endfor %}
+      </ul>
+      {% endif %}
 
     <div class="row">
 
@@ -143,24 +157,28 @@
                         <td>@mdo</td>
                     </tr> -->
                     {% for order in sell %}
+                    <form method="GET" action="market/buy">
                     <tr>
-
+                            <input type="hidden" name="buy_thing" value="{{order.itemName}}">
+                            <input type="hidden" name="price" value="{{order.sellingPrice}}">
+                            <input type="hidden" name="seller" value="{{order.username_id}}">
                             <th scope="col">{{order.itemGame}}</th>
                             <th scope="col">{{order.itemName}}</th>
                             <th scope="col">{{order.username_id}}</th>
                             <th scope="col">{{order.listingDate}}</th>
                             <th scope="col">{{order.itemCondition}}</th>
                             <th scope="col">{{order.sellingPrice}}</th>
-                            <th scope="col"><a href="#" class="btn btn-primary">Buy</a></th>
+                            <th scope="col"><button type="submit" class="btn btn-primary">Buy</button></th>
             
 
                     </tr>
+                    </form>
                     {% endfor %}
                 </tbody>
             </table>
             <table class="table">
                 <thead>
-                    <h1>Unfuliflled Buy Orders</h1>
+                    <h1>Buy Orders</h1>
                     <tr>
                         <th scope="col">Game</th>
                         <th scope="col">Item</th>
@@ -202,7 +220,9 @@
                         "processing": true,
                         "ajax": {
                             "processing": true,
-                            "url": "{% url 'market-table' %}",
+                            
+                            Chaange to market-table if using again 
+                            "url": "{% url 'market' %}",
                             "dataSrc": ""
                         },
 

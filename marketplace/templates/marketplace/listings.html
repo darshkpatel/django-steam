@@ -1,0 +1,288 @@
+{% extends "marketplace/base.html" %}
+
+
+{% block head %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">SteamStore</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+        aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'games' %}">Games</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'market' %}">Marketplace</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'listings' %}">My Listings</a>
+            </li>
+        </ul>
+
+        <div class="pull-right">
+            <ul class="nav pull-right">
+                <li class="dropdown"><a href="#" style="color: #ffff" class="dropdown-toggle"
+                        data-toggle="dropdown">Welcome, {{request.user.username}} <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a style="color: red; padding:10px;" href="/logout"><i class="icon-off"></i> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</nav>
+{% endblock head %}
+
+{% block content %}
+<div class="container-fluid">
+
+
+      <!-- Django Flash Message Code  -->
+      {% if messages %}
+      <ul class="messages" style="list-style-type:none">
+          {% for msg in messages %}       
+          <li>
+              <div class="alert alert-{{msg.level_tag}}" role="alert">
+              {{msg.message}}
+              </div>
+          </li>
+          {% endfor %}
+      </ul>
+      {% endif %}
+
+
+        <!-- Inventory Jumbo Card -->
+
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4> My Inventory </h4>
+                    </div>
+                    <div class="card-body">
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Game</th>
+                                    <th scope="col">Item</th>
+                                    <th scope="col">Seller</th>
+                                    <th scope="col">Date Listed</th>
+                                    <th scope="col">Minimum Sell Price(INR)</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- <tr>
+                                    <th scope="row">1</th>
+                                    <td>Mark</td>
+                                    <td>Otto</td>
+                                    <td>@mdo</td>
+                                </tr> -->
+                                {% for order in items %}
+                                <form action="/market/sell" method="GET">
+                                <tr>
+                                    <input name="sell_thing" type="hidden" value="{{order.itemName}}">
+                                        <th scope="col">{{order.gameName }}</th>
+                                        <th scope="col">{{order.itemName}}</th>
+                                        <th scope="col">{{request.user.username}}</th>
+                                        <th scope="col">Now</th>
+                                        <th scope="col"><input name="price" type="number" placeholder="Minimum Selling Price"></th>
+                                        <th scope="col"><button type="submit" class="btn btn-primary">Place Sell Order</button></th>
+                        
+            
+                                </tr>
+                                </form>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+
+    </div>
+    <br>
+    <br>
+                <div class="card">
+                    <div class="card-header">
+                        <h4> My Sell Orders </h4>
+                    </div>
+                    <div class="card-body">
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Game</th>
+                                    <th scope="col">Item</th>
+                                    <th scope="col">Seller</th>
+                                    <th scope="col">Date Listed</th>
+                                    <th scope="col">Condition</th>
+                                    <th scope="col">Price(INR)</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- <tr>
+                                    <th scope="row">1</th>
+                                    <td>Mark</td>
+                                    <td>Otto</td>
+                                    <td>@mdo</td>
+                                </tr> -->
+                                {% for order in sell %}
+                                <form action="/listings/delete" method="GET">
+                                <tr>
+                                    {% if order.username_id == request.user.username %}
+                                        <th scope="col">{{order.itemGame}}</th>
+                                        <th scope="col">{{order.itemName}}</th>
+                                        <th scope="col">{{order.username_id}}</th>
+                                        <th scope="col">{{order.listingDate}}</th>
+                                        <th scope="col">{{order.itemCondition}}</th>
+                                        <th scope="col">{{order.sellingPrice}}</th>
+                                        <input type="hidden" name="delete_thing" value="{{order.itemName}}">
+                                        <th scope="col"><button type="submit" class="btn btn-danger btn-small">Delete</button></th>
+                        
+                                    {% endif %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+
+    </div>
+
+
+    <div class="row">
+
+        <div class="col">
+<br>
+<br>
+
+            <!-- <table class="table table-striped table-bordered" id="example">
+
+                </table> -->
+                <div class="card">
+                    <div class="card-header">
+                        <h4> My Buy Orders </h4>
+                    </div>
+                    <div class="card-body">
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Game</th>
+                                    <th scope="col">Item</th>
+                                    <th scope="col">Seller</th>
+                                    <th scope="col">Date Listed</th>
+                                    <th scope="col">Condition</th>
+                                    <th scope="col">Price(INR)</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- <tr>
+                                    <th scope="row">1</th>
+                                    <td>Mark</td>
+                                    <td>Otto</td>
+                                    <td>@mdo</td>
+                                </tr> -->
+                                {% for border in buy %}
+                                {% if border.username_id == request.user.username %}
+                                <form method="GET" action="/listings/buyOrder_delete">
+                                <tr>
+            
+                                        <th scope="col">{{border.itemGame}}</th>
+                                        <th scope="col">{{border.itemName}}</th>
+                                        <th scope="col">{{border.username_id}}</th>
+                                        <th scope="col">{{border.listingDate}}</th>
+                                        <th scope="col">{{border.itemCondition}}</th>
+                                        <th scope="col">{{border.buyPrice}}</th>
+                                        <input type="hidden" name="list_thing" value="{{border.itemName}}">
+                                        <th scope="col"><button type="submit" class="btn btn-danger">Delete</button></th>
+                                </tr>
+                                </form>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+
+    </div>
+
+
+
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h4> Place Buy Order </h4>
+                </div>
+                <div class="card-body">
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Game</th>
+                                <th scope="col">Item</th>
+                                <!-- <th scope="col">Seller</th> -->
+                                <!-- <th scope="col">Date Listed</th> -->
+                                <th scope="col">Condition</th>
+                                <th scope="col">Max Price(INR)</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        
+                            {% for item in all_items %}
+                            <form action="/listings/buyOrder" method="GET">
+                            <tr>
+                                    <input type="hidden" name="list_thing" value="{{item.itemName}}">
+
+                                    <th scope="col">{{item.itemGame}}</th>
+                                    <th scope="col">{{item.itemName}}</th>
+                                    <th scope="col">{{item.itemCondition}}</th>
+                                    <th scope="col"><input type="number" name="price"></th>
+                                    <th scope="col"><button type="submit" class="btn btn-primary btn-small">Place Buy Order</button></th>
+                    
+                            </tr>
+                            </form>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+
+</div>
+        </div>
+    </div>
+    <!-- <script type="text/javascript" language="javascript" class="init">
+                $(document).ready(function () {
+                    $('#example').dataTable({
+                        "processing": true,
+                        "ajax": {
+                            "processing": true,
+                            
+                            Chaange to market-table if using again 
+                            "url": "{% url 'market' %}",
+                            "dataSrc": ""
+                        },
+
+                        "columns": [
+                            { "data": "fields.itemName" },
+                            { "data": "fields.itemDescription" },
+                            { "data": "<a href='fields.itemDescription'>TEST</a>" },
+                        ]
+                    });
+                });
+            </script> -->
+    {% endblock content %}

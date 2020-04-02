@@ -22,8 +22,11 @@ def get_inventory_items(username):
 
 
 def get_item_details(itemID):
+    item_codes = {'FN':'Factory New',
+                    'FT':'Field Tested',
+                    'BS':'Battle Scarred'}
     details = {
-        'itemCondition': list(Item.objects.filter(itemID=itemID).values())[0]['itemCondition'],
+        'itemCondition': item_codes[list(Item.objects.filter(itemID=itemID).values())[0]['itemCondition']],
         'itemGame': list(Item.objects.filter(itemID=itemID).values())[0]['gameID_id'],
         'itemName': list(Item.objects.filter(itemID=itemID).values())[0]['itemName']
         }
@@ -39,8 +42,9 @@ def get_sell_orders():
         order.update(get_item_details(order['itemID_id']))
         order.update({'listingDate': order['listingDate'].strftime('%D at %T')})
         order.update({'sellingPrice': str(order['sellingPrice'])})
-        order.update({'itemCondition': item_codes[order['itemCondition']]})
+        # order.update({'itemCondition': item_codes[order['itemCondition']]})
     return sell_orders
+
 def get_buy_orders():
     item_codes = {'FN':'Factory New',
                     'FT':'Field Tested',
@@ -50,7 +54,7 @@ def get_buy_orders():
         order.update(get_item_details(order['itemID_id']))
         order.update({'listingDate': order['listingDate'].strftime('%D at %T')})
         order.update({'buyPrice': str(order['buyPrice'])})
-        order.update({'itemCondition': item_codes[order['itemCondition']]})
+        # order.update({'itemCondition': item_codes[order['itemCondition']]})
     return buy_orders
 
 def get_games():
