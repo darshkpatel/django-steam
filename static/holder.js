@@ -2972,7 +2972,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ }
 /******/ ])
 });
-;
+
 (function(ctx, isMeteorPackage) {
     if (isMeteorPackage) {
         Holder = ctx.Holder;
